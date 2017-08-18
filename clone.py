@@ -32,10 +32,10 @@ import matplotlib.pyplot as plt
 
 batch_size = 128
 num_classes = 10
-epochs = 12
+num_epochs = 12
 
 lines = []
-with open('./data/driving_log.csv') as csvfile:
+with open('./sim_data/driving_log.csv') as csvfile:
 	reader = csv.reader(csvfile)
 	for line in reader:
 		lines.append(line)
@@ -46,7 +46,7 @@ for line in lines:
 	for i in range(3):
 		source_path = line[i]
 		filename = source_path.split('\\')[-1]
-		current_path = '.\\data\\IMG\\' + filename
+		current_path = './sim_data/IMG' + filename
 		image = cv2.imread(current_path)
 		images.append(image)
 		measurement = float(line[3]) # steering measurement
@@ -71,11 +71,11 @@ model = Sequential()
 model.add(Lambda(lambda x: x/255.0 - 0.5, input_shape=(160,320,3)))
 model.add(Cropping2D(cropping=((50,20), (0,0)), input_shape=(160,320,3)))
 print(model.output_shape)
-model.add(Conv2D(24, (5, 5), data_format="channels_last", activation="relu", strides=(2, 2)))
-model.add(Conv2D(36, (5, 5), data_format="channels_last", activation="relu", strides=(2, 2)))
-model.add(Conv2D(48, (5, 5), data_format="channels_last", activation="relu", strides=(2, 2)))
-model.add(Conv2D(64, (5, 5), data_format="channels_last", activation="relu"))
-model.add(Conv2D(64, (5, 5), data_format="channels_last", activation="relu"))
+model.add(Conv2D(24, (5, 5), data_format="channels_last", activation='relu', strides=(2,2)))
+model.add(Conv2D(36, (5, 5), data_format="channels_last", activation='relu', strides=(2,2)))
+model.add(Conv2D(48, (5, 5), data_format="channels_last", activation='relu', strides=(2,2)))
+model.add(Conv2D(64, (5, 5), data_format="channels_last", activation='relu'))
+model.add(Conv2D(64, (5, 5), data_format="channels_last", activation='relu'))
 model.add(Flatten())
 model.add(Dense(100))
 model.add(Dense(50))
@@ -93,7 +93,7 @@ model.add(Dense(1))
 
 
 model.compile(loss='mse', optimizer='adam')
-model.fit(X_train, y_train, validation_split=0.2, shuffle=True)
+model.fit(X_train, y_train, validation_split=0.2, shuffle=True, epochs=num_epochs)
 
 # history_object = model.fit_generator(train_generator, samples_per_epoch =
 #     len(train_samples), validation_data = 
