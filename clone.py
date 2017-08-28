@@ -62,6 +62,8 @@ for image, measurement in zip(images, measurements):
 X_train = np.array(augmented_images)
 y_train = np.array(augmented_measurements)
 
+print(X_train.shape)
+
 
 # img_rows, img_cols = X_train[0].shape[0], X_train[0].shape[1]
 # X_train = X_train.reshape(X_train.shape[0], img_cols, img_rows, 3)
@@ -71,11 +73,11 @@ model = Sequential()
 model.add(Lambda(lambda x: x/255.0 - 0.5, input_shape=(160,320,3)))
 model.add(Cropping2D(cropping=((50,20), (0,0)), input_shape=(160,320,3)))
 print(model.output_shape)
-model.add(Conv2D(24, (5, 5), data_format="channels_last", activation='relu', strides=(2,2)))
-model.add(Conv2D(36, (5, 5), data_format="channels_last", activation='relu', strides=(2,2)))
-model.add(Conv2D(48, (5, 5), data_format="channels_last", activation='relu', strides=(2,2)))
-model.add(Conv2D(64, (5, 5), data_format="channels_last", activation='relu'))
-model.add(Conv2D(64, (5, 5), data_format="channels_last", activation='relu'))
+model.add(Conv2D(24, kernel_size=(5, 5), data_format="channels_last", activation='relu', strides=(2,2)))
+model.add(Conv2D(36, kernel_size=(5, 5), data_format="channels_last", activation='relu', strides=(2,2)))
+model.add(Conv2D(48, kernel_size=(5, 5), data_format="channels_last", activation='relu', strides=(2,2)))
+model.add(Conv2D(64, kernel_size=(5, 5), data_format="channels_last", activation='relu'))
+model.add(Conv2D(64, kernel_size=(5, 5), data_format="channels_last", activation='relu'))
 model.add(Flatten())
 model.add(Dense(100))
 model.add(Dense(50))
