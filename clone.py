@@ -45,12 +45,13 @@ measurements = []
 for line in lines:
 	for i in range(3):
 		source_path = line[i]
-		filename = source_path.split('\\')[-1]
-		current_path = './sim_data/IMG' + filename
+		filename = source_path.split('/')[-1]
+		current_path = './sim_data/IMG/' + filename
 		image = cv2.imread(current_path)
 		images.append(image)
 		measurement = float(line[3]) # steering measurement
 		measurements.append(measurement)
+        
 
 augmented_images, augmented_measurements = [], []
 for image, measurement in zip(images, measurements):
@@ -58,17 +59,20 @@ for image, measurement in zip(images, measurements):
 	augmented_measurements.append(measurement)
 	augmented_images.append(cv2.flip(image,1))
 	augmented_measurements.append(measurement*-1.0)
+    
+
 
 X_train = np.array(augmented_images)
 y_train = np.array(augmented_measurements)
 
 print(X_train.shape)
 
-
-# img_rows, img_cols = X_train[0].shape[0], X_train[0].shape[1]
-# X_train = X_train.reshape(X_train.shape[0], img_cols, img_rows, 3)
-# X_test = X_test.reshape(X_test.shape[0], img_cols, img_rows, 1)
-
+#img_rows, img_cols = X_train.shape[0], X_train.shape[1]
+#X_train = X_train.reshape(X_train.shape[0], img_cols, img_rows, 3)
+## X_test = X_test.reshape(X_test.shape[0], img_cols, img_rows, 1)
+#
+#print(X_train.shape)
+#
 model = Sequential()
 model.add(Lambda(lambda x: x/255.0 - 0.5, input_shape=(160,320,3)))
 model.add(Cropping2D(cropping=((70,25), (0,0)), input_shape=(160,320,3)))
@@ -84,14 +88,14 @@ model.add(Dense(50))
 model.add(Dense(10))
 model.add(Dense(1))
 
-# model.add(Convolution2D(6, 5, 5, activation="relu"))
-# model.add(MaxPooling2D())
-# model.add(Convolution2D(6, 5, 5, activation="relu"))
-# model.add(MaxPooling2D())
-# model.add(Flatten())
-# model.add(Dense(120))
-# model.add(Dense(84))
-# model.add(Dense(1))
+## model.add(Convolution2D(6, 5, 5, activation="relu"))
+## model.add(MaxPooling2D())
+## model.add(Convolution2D(6, 5, 5, activation="relu"))
+## model.add(MaxPooling2D())
+## model.add(Flatten())
+## model.add(Dense(120))
+## model.add(Dense(84))
+## model.add(Dense(1))
 
 
 model.compile(loss='mse', optimizer='adam')
